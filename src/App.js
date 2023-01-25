@@ -1,25 +1,37 @@
-import logo from './logo.svg';
+import { render } from "react-dom";
+import { StrictMode, useState, lazy, Suspense } from "react";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import ThemeContext from "./ThemeContext";
 import './App.css';
 
-function App() {
+
+const Details = lazy(() => import ("./Details"));
+const SearchParams = lazy(() => import ("./SearchParams"));
+
+
+
+
+const App = () => {
+  const theme = useState("darkblue");
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <StrictMode>
+      <ThemeContext.Provider value={theme}>
+      <Suspense fallback={<h1>loading, get a job you motherFucker</h1>}>
+        <BrowserRouter>
+          <header>
+            <Link to="/">Adopt Me!</Link>
+          </header>
+          <Routes>
+            <Route path="/details/:id" element={<Details />} />
+            <Route path="/" element={<SearchParams />} />
+          </Routes>
+        </BrowserRouter>
+        </Suspense>
+      </ThemeContext.Provider>
+    </StrictMode>
   );
-}
+};
 
 export default App;
+
+//render(<App />, document.getElementById("root"));
